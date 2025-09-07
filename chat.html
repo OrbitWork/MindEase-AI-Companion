@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMaze Chat</title>
+    <link rel="stylesheet" href="chat.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body data-theme="light">
+    <!-- Navigation Header -->
+    <nav class="chat-navbar">
+        <div class="nav-left">
+            <div class="logo-section">
+                <img src="/assets/logo.png" alt="MindMaze" class="navbar-logo">
+                <span class="brand-text">MindMaze</span>
+            </div>
+        </div>
+        <div class="nav-right">
+<!--             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button> -->
+            <div class="user-profile-badge">
+                <div class="profile-circle">
+                    <svg class="profile-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <div class="profile-info">
+                    <span class="user-name-bold" id="userName">Loading...</span>
+                    <span class="user-subtext">Patient</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="main-container">
+        <!-- Chat Card -->
+        <div class="chat-card">
+            <!-- Chat Window -->
+            <div class="chat-window" id="chatWindow">
+                <!-- Greeting Section -->
+                <div class="greeting-section" id="greetingSection">
+                    <div class="greeting-message">
+                        <div class="bot-avatar">🤖</div>
+                        <div class="greeting-bubble">
+                            <p id="greetingText">👋 Hi! How are you feeling today?</p>
+                        </div>
+                    </div>
+                    <div class="quick-replies" id="quickReplies">
+                        <button class="quick-reply-btn" data-message="I feel good">😊 I feel good</button>
+                        <button class="quick-reply-btn" data-message="A bit stressed">😟 A bit stressed</button>
+                        <button class="quick-reply-btn" data-message="Tired">😴 Tired</button>
+                        <button class="quick-reply-btn" data-message="Need motivation">💪 Need motivation</button>
+                    </div>
+                </div>
+
+                <!-- Daily Tip Section -->
+                <div class="daily-tip-section" id="dailyTipSection">
+                    <div class="daily-tip">
+                        <div class="tip-icon">💡</div>
+                        <div class="tip-content">
+                            <p id="dailyTipText">Today's Tip: Try 5 minutes of deep breathing for a calmer mind.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be dynamically added here -->
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <div class="bot-avatar">🤖</div>
+                    <div class="typing-bubble">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Footer -->
+            <div class="chat-footer">
+                <div class="usage-counter">
+                    <i class="fas fa-message"></i>
+                    <span id="usageText">Chats left today: 20/20</span>
+                </div>
+                <div class="input-container">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Type your message..." 
+                        disabled
+                    >
+                    <button id="sendBtn" class="send-btn" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <button class="back-btn" onclick="window.location.href='patient-dashboard.html'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+    </button>
+
+    <!-- Footer -->
+    <footer class="chat-footer">
+        <p>&copy; 2024 MindMaze. Supporting your mental wellness journey.</p>
+        <p>
+            <a href="#">Privacy Policy</a> | 
+            <a href="#">Terms of Service</a> | 
+            <a href="#">Support</a>
+        </p>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p>Connecting to MindMaze...</p>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module" src="chat.js"></script>
+</body>
+</html>

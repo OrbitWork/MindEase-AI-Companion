@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Wellness Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #8DDFCB;
+            --secondary: #82AAE3;
+            --accent: #91D8E4;
+            --text: #333333;
+            --light-bg: #FAFAFA;
+        }
+
+        * {
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        /* Message animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message {
+            animation: fadeIn 0.3s forwards;
+        }
+
+        /* Typing indicator animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        .typing-dot {
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        /* Chat container scrollbar */
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-cyan-100 to-blue-100 p-4 shadow-sm">
+        <div class="container mx-auto flex items-center">
+            <div class="flex items-center">
+                <img src="https://placehold.co/40x40" 
+                     alt="ZenChat bot logo - a simple circular icon with a calming abstract wave pattern in soft blue tones" 
+                     class="rounded-full mr-3 border-2 border-white shadow">
+                <h1 class="text-2xl font-semibold text-gray-700">Your Wellness Companion</h1>
+            </div>
+            <button id="theme-toggle" class="ml-auto bg-white p-2 rounded-full shadow">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Chat Area -->
+    <main class="flex-1 container mx-auto p-4 max-w-4xl">
+        <div id="chat-container" class="chat-container bg-white rounded-xl shadow-md p-4 h-[70vh] overflow-y-auto mb-4">
+            <!-- Welcome message -->
+            <div class="message bot-message max-w-[80%] mb-4">
+                <div class="flex items-start">
+                    <img src="https://placehold.co/32x32" 
+                         alt="Bot avatar - simple smiling face icon in soft blue tones" 
+                         class="rounded-full mr-2">
+                    <div>
+                        <div class="bg-gray-100 rounded-2xl rounded-tl-none py-2 px-4">
+                            <p class="text-gray-800">Hello! I'm your Wellness Companion. How are you feeling today?</p>
+                        </div>
+                        <div class="flex flex-wrap mt-2 space-x-2">
+                            <button class="quick-reply-btn bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm">
+                                I feel anxious
+                            </button>
+                            <button class="quick-reply-btn bg-green-100 hover:bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm">
+                                I'm feeling good
+                            </button>
+                            <button class="quick-reply-btn bg-purple-100 hover:bg-purple-200 text-purple-800 px-3 py-1 rounded-full text-sm">
+                                I can't sleep
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1 ml-2">10:15 AM</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Typing indicator (hidden by default) -->
+        <div id="typing-indicator" class="hidden mb-4">
+            <div class="flex items-start">
+                <img src="https://placehold.co/32x32" 
+                     alt="Bot avatar - simple smiling face icon in soft blue tones" 
+                     class="rounded-full mr-2">
+                <div class="bg-gray-100 rounded-2xl rounded-tl-none py-2 px-4 inline-flex items-center h-10">
+                    <div class="typing-dot bg-gray-400 w-2 h-2 rounded-full mx-1"></div>
+                    <div class="typing-dot bg-gray-400 w-2 h-2 rounded-full mx-1"></div>
+                    <div class="typing-dot bg-gray-400 w-2 h-2 rounded-full mx-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input area -->
+        <div class="bg-white rounded-xl shadow-md p-3">
+            <div class="flex items-center">
+                <button id="mood-toggle" class="p-2 rounded-full hover:bg-gray-100 mr-2 text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </button>
+                <div id="mood-selector" class="hidden bg-gray-50 p-2 rounded-lg shadow-lg absolute bottom-16 mb-2 z-10">
+                    <p class="text-sm text-gray-600 mb-2">Select your mood:</p>
+                    <div class="flex space-x-2">
+                        <button class="mood-option" data-mood="happy">😊</button>
+                        <button class="mood-option" data-mood="calm">😌</button>
+                        <button class="mood-option" data-mood="sad">😔</button>
+                        <button class="mood-option" data-mood="anxious">😰</button>
+                        <button class="mood-option" data-mood="angry">😠</button>
+                    </div>
+                </div>
+                <input type="text" id="message-input" 
+                       class="flex-1 border border-gray-200 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-100" 
+                       placeholder="Type your message here...">
+                <button id="send-btn" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                </button>
+            </div>
+            <div id="quick-reply-container" class="mt-2 flex flex-wrap gap-2 hidden">
+                <!-- Quick replies will be added here dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Chatbot functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatContainer = document.getElementById('chat-container');
+            const messageInput = document.getElementById('message-input');
+            const sendBtn = document.getElementById('send-btn');
+            const typingIndicator = document.getElementById('typing-indicator');
+            const quickReplyContainer = document.getElementById('quick-reply-container');
+            const moodToggle = document.getElementById('mood-toggle');
+            const moodSelector = document.getElementById('mood-selector');
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            // Sample responses and conversation flows
+            const botResponses = {
+                greet: [
+                    "How can I support you today?",
+                    "I'm here to listen. What's on your mind?",
+                    "Thank you for sharing. How are you really feeling?"
+                ],
+                anxious: [
+                    "I notice you're feeling anxious. Would you like to try a simple breathing exercise to help calm your mind?",
+                    "Anxiety can feel overwhelming. Remember, this feeling will pass. Would you like me to guide you through a grounding technique?",
+                    "I'm here with you. Let's take a moment to focus on your breathing together."
+                ],
+                happy: [
+                    "It's wonderful to hear you're feeling good! Would you like to try a gratitude exercise to amplify this positive feeling?",
+                    "Celebrate this moment of happiness! What's contributing to your good mood today?",
+                    "Happiness is contagious! Do you want to reflect on what's bringing you joy?"
+                ],
+                sleep: [
+                    "Having trouble sleeping can be frustrating. Have you tried the 4-7-8 breathing technique?",
+                    "I understand sleep issues can be tough. Would you like me to guide you through a short relaxation exercise?",
+                    "Let's explore what might be affecting your sleep. Could you tell me more about your bedtime routine?"
+                ],
+                default: [
+                    "I appreciate you sharing that with me. Let me think of how I can best support you right now.",
+                    "I hear you. Sometimes just expressing how we feel can be helpful in itself.",
+                    "Thank you for being open with me. Would you like to explore this feeling together?"
+                ]
+            };
+
+            const quickReplies = {
+                anxious: [
+                    "Yes, guide me through breathing",
+                    "Tell me grounding techniques",
+                    "I need distraction"
+                ],
+                happy: [
+                    "Do gratitude exercise",
+                    "Share what's making me happy",
+                    "Save this mood"
+                ],
+                sleep: [
+                    "Teach me 4-7-8 breathing",
+                    "Relaxation exercise please",
+                    "Bedtime routine tips"
+                ]
+            };
+
+            // Add a message to the chat
+            function addMessage(text, isUser = false, quickRepliesArr = null) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'} max-w-[80%] mb-4 ${isUser ? 'ml-auto' : ''}`;
+                
+                const messageContent = `
+                    <div class="flex items-start ${isUser ? 'flex-row-reverse' : ''}">
+                        <img src="https://placehold.co/32x32" 
+                             alt="${isUser ? 'User profile icon - a simple silhouette of a person in soft gray' : 'Bot avatar - simple smiling face icon in soft blue tones'}" 
+                             class="rounded-full ${isUser ? 'ml-2' : 'mr-2'}">
+                        <div>
+                            <div class="${isUser ? 'bg-blue-100 rounded-2xl rounded-tr-none' : 'bg-gray-100 rounded-2xl rounded-tl-none'} py-2 px-4">
+                                <p class="${isUser ? 'text-blue-800' : 'text-gray-800'}">${text}</p>
+                            </div>
+                            ${quickRepliesArr && !isUser ? 
+                                `<div class="flex flex-wrap mt-2 space-x-2">
+                                    ${quickRepliesArr.map(reply => 
+                                        `<button class="quick-reply-btn ${getQuickReplyColor(reply)} px-3 py-1 rounded-full text-sm">
+                                            ${reply}
+                                        </button>`
+                                    ).join('')}
+                                </div>` : ''
+                            }
+                            <p class="text-xs text-gray-500 mt-1 ${isUser ? 'text-right mr-2' : 'ml-2'}">${getCurrentTime()}</p>
+                        </div>
+                    </div>
+                `;
+                
+                messageDiv.innerHTML = messageContent;
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            // Helper function to determine quick reply button colors
+            function getQuickReplyColor(text) {
+                if (text.includes('anxious') || text.includes('grounding') || text.includes('distraction')) {
+                    return 'bg-blue-100 hover:bg-blue-200 text-blue-800';
+                } else if (text.includes('happy') || text.includes('gratitude') || text.includes('save')) {
+                    return 'bg-green-100 hover:bg-green-200 text-green-800';
+                } else {
+                    return 'bg-purple-100 hover:bg-purple-200 text-purple-800';
+                }
+            }
+
+            // Get current time in HH:MM AM/PM format
+            function getCurrentTime() {
+                const now = new Date();
+                let hours = now.getHours();
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                return `${hours}:${minutes} ${ampm}`;
+            }
+
+            // Simulate bot typing and responding
+            function botResponse(userMessage) {
+                // Show typing indicator
+                typingIndicator.classList.remove('hidden');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // Hide any existing quick replies
+                quickReplyContainer.classList.add('hidden');
+                quickReplyContainer.innerHTML = '';
+                
+                setTimeout(() => {
+                    typingIndicator.classList.add('hidden');
+                    
+                    let responseCategory = 'default';
+                    let replies = null;
+                    
+                    if (userMessage.toLowerCase().includes('anxious') || userMessage.toLowerCase().includes('stressed')) {
+                        responseCategory = 'anxious';
+                        replies = quickReplies.anxious;
+                    } else if (userMessage.toLowerCase().includes('happy') || userMessage.toLowerCase().includes('good')) {
+                        responseCategory = 'happy';
+                        replies = quickReplies.happy;
+                    } else if (userMessage.toLowerCase().includes('sleep') || userMessage.toLowerCase().includes('tired')) {
+                        responseCategory = 'sleep';
+                        replies = quickReplies.sleep;
+                    }
+                    
+                    const botMessages = botResponses[responseCategory] || botResponses.default;
+                    const randomResponse = botMessages[Math.floor(Math.random() * botMessages.length)];
+                    
+                    addMessage(randomResponse, false, replies);
+                    
+                    // Check if we should suggest any follow-up
+                    suggestFollowUp(responseCategory);
+                }, 1500 + Math.random() * 1500); // Random delay to simulate typing
+            }
+
+            // Suggest follow-up questions/messages
+            function suggestFollowUp(category) {
+                if (quickReplies[category]) {
+                    quickReplyContainer.innerHTML = '';
+                    const followUpTitle = document.createElement('p');
+                    followUpTitle.className = 'text-xs text-gray-500 w-full';
+                    followUpTitle.textContent = 'Suggestions:';
+                    quickReplyContainer.appendChild(followUpTitle);
+                    
+                    quickReplies[category].forEach(reply => {
+                        const btn = document.createElement('button');
+                        btn.className = `quick-reply-btn ${getQuickReplyColor(reply)} px-3 py-1 rounded-full text-sm`;
+                        btn.textContent = reply;
+                        btn.addEventListener('click', () => {
+                            addMessage(reply, true);
+                            botResponse(reply);
+                        });
+                        quickReplyContainer.appendChild(btn);
+                    });
+                    
+                    quickReplyContainer.classList.remove('hidden');
+                }
+            }
+
+            // Send message
+            sendBtn.addEventListener('click', () => {
+                sendMessage();
+            });
+
+            // Send on Enter key
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                const message = messageInput.value.trim();
+                if (message) {
+                    addMessage(message, true);
+                    messageInput.value = '';
+                    botResponse(message);
+                }
+            }
+
+            // Quick reply buttons (delegated event)
+            chatContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('quick-reply-btn')) {
+                    const message = e.target.textContent;
+                    addMessage(message, true);
+                    botResponse(message);
+                }
+            });
+
+            // Mood selector toggle
+            moodToggle.addEventListener('click', (e) => {
+                moodSelector.classList.toggle('hidden');
+                e.stopPropagation();
+            });
+
+            // Hide mood selector when clicking elsewhere
+            document.addEventListener('click', () => {
+                moodSelector.classList.add('hidden');
+            });
+
+            // Mood selection
+            document.querySelectorAll('.mood-option').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const mood = e.target.dataset.mood;
+                    addMessage(`I'm feeling ${mood}`, true);
+                    botResponse(mood);
+                    moodSelector.classList.add('hidden');
+                    e.stopPropagation();
+                });
+            });
+
+            // Theme toggle (light/dark mode)
+            themeToggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.add('bg-gray-900');
+                    document.querySelector('header').classList.remove('bg-gradient-to-r', 'from-cyan-100', 'to-blue-100');
+                    document.querySelector('header').classList.add('bg-gray-800');
+                } else {
+                    document.documentElement.classList.remove('bg-gray-900');
+                    document.querySelector('header').classList.add('bg-gradient-to-r', 'from-cyan-100', 'to-blue-100');
+                    document.querySelector('header').classList.remove('bg-gray-800');
+                }
+            });
+
+            // Initial greeting
+            setTimeout(() => {
+                addMessage("Welcome! I'm here to support your mental wellness today. Whether you want to talk, get resources, or practice mindfulness exercises, I'm here for you.", false);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

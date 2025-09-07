@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MindEase - Mood Tracker Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f9ff;
+      color: #0c4a6e;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6 bg-gradient-to-br from-blue-100 to-green-100">
+  <div class="max-w-4xl mx-auto bg-white rounded-xl shadow p-6">
+    <h1 class="text-3xl font-bold mb-6 text-cyan-800">Resources</h1>
+
+    <!-- Tabs -->
+    <div class="flex space-x-4 mb-6">
+      <button id="tab-selfcare" class="px-4 py-2 bg-cyan-600 text-white rounded-lg" onclick="showResourceTab('selfcare')">Self-Care Techniques</button>
+      <button id="tab-moodtracker" class="px-4 py-2 border border-cyan-600 text-cyan-600 rounded-lg hover:bg-cyan-100" onclick="showResourceTab('moodtracker')">Mood Tracker</button>
+    </div>
+
+    <!-- Self-Care Content -->
+    <div id="resource-selfcare">
+      <h2 class="text-xl font-semibold mb-4 text-cyan-800">Self-Care Techniques</h2>
+      <div class="space-y-6">
+        <div class="bg-cyan-50 p-4 rounded-lg">
+          <h3 class="font-medium text-cyan-800 mb-2">Deep Breathing Exercise</h3>
+          <p class="text-gray-700">Inhale for 4 seconds, hold for 7 seconds, exhale for 8 seconds. Repeat 3-4 times to quickly reduce stress.</p>
+        </div>
+        
+        <div class="bg-cyan-50 p-4 rounded-lg">
+          <h3 class="font-medium text-cyan-800 mb-2">5-4-3-2-1 Grounding Technique</h3>
+          <p class="text-gray-700">Identify 5 things you see, 4 things you can touch, 3 sounds you hear, 2 smells, and 1 taste to help with anxiety.</p>
+        </div>
+        
+        <div class="bg-cyan-50 p-4 rounded-lg">
+          <h3 class="font-medium text-cyan-800 mb-2">Cognitive Behavioral Exercises</h3>
+          <p class="text-gray-700">Challenge negative thoughts by examining evidence for/against them and reframing perspectives.</p>
+        </div>
+        
+        <div class="bg-cyan-50 p-4 rounded-lg">
+          <h3 class="font-medium text-cyan-800 mb-2">Therapeutic Journaling</h3>
+          <p class="text-gray-700">Write about emotions, daily wins, things within/outside your control, and gratitude to process feelings.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mood Tracker Content -->
+    <div id="resource-moodtracker" class="hidden">
+      <h2 class="text-xl font-semibold mb-4 text-cyan-800">Daily Mood Tracker</h2>
+      <div class="mb-4">
+        <p class="mb-2">How are you feeling today?</p>
+        <div class="flex space-x-2 mb-4">
+          <button class="mood-btn px-4 py-2 bg-green-100 text-green-800 rounded-lg" onclick="logMood('happy')">😊 Happy</button>
+          <button class="mood-btn px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg" onclick="logMood('neutral')">😐 Neutral</button>
+          <button class="mood-btn px-4 py-2 bg-blue-100 text-blue-800 rounded-lg" onclick="logMood('sad')">😔 Sad</button>
+          <button class="mood-btn px-4 py-2 bg-purple-100 text-purple-800 rounded-lg" onclick="logMood('anxious')">😟 Anxious</button>
+        </div>
+        <textarea id="mood-notes" placeholder="Any notes about your mood?" class="w-full border border-gray-300 rounded-lg p-2 mb-4"></textarea>
+        <button class="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700" onclick="saveMoodEntry()">Save Mood</button>
+      </div>
+
+      <div class="mb-4" id="motivation-text"></div>
+
+      <canvas id="mood-history-chart" class="w-full h-64"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    function showResourceTab(tab) {
+      // Clear any active mood selection when switching tabs
+      currentMood = '';
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-cyan-500');
+      });
+      const selfcare = document.getElementById('resource-selfcare');
+      const moodtracker = document.getElementById('resource-moodtracker');
+      const tabSelfcare = document.getElementById('tab-selfcare');
+      const tabMoodtracker = document.getElementById('tab-moodtracker');
+
+      if (tab === 'selfcare') {
+        selfcare.classList.remove('hidden');
+        moodtracker.classList.add('hidden');
+        tabSelfcare.classList.add('bg-cyan-600', 'text-white');
+        tabSelfcare.classList.remove('border', 'text-cyan-600');
+        tabMoodtracker.classList.remove('bg-cyan-600', 'text-white');
+        tabMoodtracker.classList.add('border', 'text-cyan-600');
+      } else {
+        selfcare.classList.add('hidden');
+        moodtracker.classList.remove('hidden');
+        tabMoodtracker.classList.add('bg-cyan-600', 'text-white');
+        tabMoodtracker.classList.remove('border', 'text-cyan-600');
+        tabSelfcare.classList.remove('bg-cyan-600', 'text-white');
+        tabSelfcare.classList.add('border', 'text-cyan-600');
+      }
+    }
+
+    // Mood tracking variables
+    let currentMood = '';
+    let moodEntries = [];
+
+    // Load saved mood entries from localStorage
+    function loadMoodData() {
+      const saved = localStorage.getItem('moodEntries');
+      if (saved) {
+        moodEntries = JSON.parse(saved);
+      }
+      renderMoodHistory();
+      updateMotivationalMessage();
+    }
+
+    // Log mood selection and highlight button
+    function logMood(mood) {
+      currentMood = mood;
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-cyan-500');
+        if (btn.textContent.toLowerCase().includes(mood)) {
+          btn.classList.add('ring-2', 'ring-cyan-500');
+        }
+      });
+    }
+
+    // Save mood entry for today
+    function saveMoodEntry() {
+      if (!currentMood) {
+        alert('Please select a mood before saving.');
+        return;
+      }
+      const notes = document.getElementById('mood-notes').value.trim();
+      const today = new Date().toISOString().split('T')[0];
+
+      // Update existing entry for today or add new
+      const existingIndex = moodEntries.findIndex(e => e.date === today);
+      if (existingIndex !== -1) {
+        moodEntries[existingIndex] = { date: today, mood: currentMood, notes };
+      } else {
+        moodEntries.push({ date: today, mood: currentMood, notes });
+      }
+
+      localStorage.setItem('moodEntries', JSON.stringify(moodEntries));
+      updateMotivationalMessage();
+      renderMoodHistory();
+      document.getElementById('mood-notes').value = '';
+      alert('Mood saved!');
+    }
+
+    // Show motivational message based on current mood
+    function updateMotivationalMessage() {
+      const container = document.getElementById('motivation-text');
+      if (!currentMood) {
+        container.innerHTML = '';
+        return;
+      }
+      const messages = {
+        happy: "That's wonderful! Happiness radiates positive energy that impacts everyone around you.",
+        neutral: "Neutral days help us appreciate emotional highs and learn from lows.",
+        sad: "It's okay to feel sad sometimes - acknowledging emotions is key to emotional intelligence.",
+        anxious: "Anxiety is natural but temporary. You're stronger than you think!"
+      };
+      const colors = {
+        happy: 'green',
+        neutral: 'yellow',
+        sad: 'blue',
+        anxious: 'purple'
+      };
+      const color = colors[currentMood] || 'gray';
+
+      container.innerHTML = `
+        <div class="bg-${color}-100 p-3 rounded-lg text-${color}-800">
+          <p>${messages[currentMood]}</p>
+        </div>
+      `;
+    }
+
+    // Render mood history chart
+    let moodChart = null;
+    function renderMoodHistory() {
+      const ctx = document.getElementById('mood-history-chart').getContext('2d');
+      if (moodChart) {
+        moodChart.destroy();
+      }
+      if (moodEntries.length === 0) {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        return;
+      }
+      moodChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: moodEntries.map(e => e.date),
+          datasets: [{
+            label: 'Mood Level',
+            data: moodEntries.map(e =>
+              e.mood === 'happy' ? 80 :
+              e.mood === 'neutral' ? 60 :
+              e.mood === 'sad' ? 30 :
+              e.mood === 'anxious' ? 45 : 50
+            ),
+            backgroundColor: 'rgba(6, 182, 212, 0.2)',
+            borderColor: 'rgba(6, 182, 212, 1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.3,
+            pointRadius: 5,
+            pointHoverRadius: 7
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              min: 0,
+              max: 100,
+              ticks: {
+                stepSize: 20,
+                callback: function(value) {
+                  if (value === 80) return 'Happy';
+                  if (value === 60) return 'Neutral';
+                  if (value === 45) return 'Anxious';
+                  if (value === 30) return 'Sad';
+                  return value;
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      showResourceTab('selfcare'); // default tab
+      loadMoodData();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase - Your Mental Health Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-soft: #6B73FF;
+            --primary-light: #9BB5FF;
+            --secondary-soft: #4ECDC4;
+            --accent-warm: #FFE66D;
+            --neutral-light: #F8FAFC;
+            --neutral-medium: #E2E8F0;
+            --text-primary: #2D3748;
+            --text-secondary: #4A5568;
+            --success-soft: #68D391;
+            --error-soft: #FC8181;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 20%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        .shape:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            bottom: 10%;
+            right: 20%;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1100px;
+            min-height: 600px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            overflow: hidden;
+            z-index: 10;
+            position: relative;
+            margin: 20px;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-soft) 0%, var(--secondary-soft) 100%);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 320px;
+            height: 240px;
+            margin-bottom: 30px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .hero-features {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .form-section {
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-toggle {
+            display: flex;
+            background: var(--neutral-medium);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 30px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .toggle-btn.active {
+            background: white;
+            color: var(--primary-soft);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--neutral-medium);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-soft);
+            box-shadow: 0 0 0 3px rgba(107, 115, 255, 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--error-soft);
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .role-option {
+            padding: 16px;
+            border: 2px solid var(--neutral-medium);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .role-option:hover {
+            border-color: var(--primary-light);
+        }
+
+        .role-option.selected {
+            border-color: var(--primary-soft);
+            background: rgba(107, 115, 255, 0.05);
+        }
+
+        .role-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .role-title {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .role-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-soft) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(107, 115, 255, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-link {
+            color: var(--primary-soft);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-link:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: var(--error-soft);
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .success-message {
+            color: var(--success-soft);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+            padding: 10px;
+            background: rgba(104, 211, 145, 0.1);
+            border-radius: 8px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-soft);
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 10px;
+            }
+
+            .hero-section {
+                padding: 40px 30px;
+            }
+
+            .form-section {
+                padding: 40px 30px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .role-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="main-container">
+        <div class="hero-section">
+            <div class="hero-image">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d49d7c70-dab1-488b-b681-fa42c5a06d57.png" alt="Peaceful meditation scene with person sitting cross-legged on a wooden dock overlooking a calm lake surrounded by misty mountains at sunrise, soft pastel colors creating a serene and therapeutic atmosphere" />
+            </div>
+            <h1 class="hero-title">MindEase</h1>
+            <p class="hero-subtitle">Your compassionate AI companion for mental wellness and emotional support</p>
+            
+            <div class="hero-features">
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <span>24/7 Mental Health Support</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <span>Privacy-First Conversations</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <span>Evidence-Based Techniques</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <span>Professional Care Connection</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-header">
+                <div class="form-toggle">
+                    <button class="toggle-btn active" id="loginToggle">Login</button>
+                    <button class="toggle-btn" id="signupToggle">Sign Up</button>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="fade-in">
+                <h2 class="form-title">Welcome Back</h2>
+                <p class="form-subtitle">Continue your journey to better mental health</p>
+
+                <form id="loginFormElement">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" id="loginEmail" placeholder="Enter your email" required>
+                        <div class="error-message" id="loginEmailError">Please enter a valid email address</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password" required>
+                        <div class="error-message" id="loginPasswordError">Password is required</div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="checkbox" id="rememberMe">
+                        <label class="checkbox-label" for="rememberMe">Remember me for 30 days</label>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="loginBtn">
+                        Sign In to MindEase
+                    </button>
+
+                    <div class="success-message" id="loginSuccess">
+                        Login successful! Redirecting to dashboard...
+                    </div>
+                </form>
+
+                <div class="form-footer">
+                    <p>Don't have an account? <a href="#" class="form-link" id="switchToSignup">Create one here</a></p>
+                    <p><a href="#" class="form-link" id="resetPassword">Forgot your password?</a></p>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signupForm" style="display: none;">
+                <h2 class="form-title">Join MindEase</h2>
+                <p class="form-subtitle">Start your mental wellness journey today</p>
+
+                <form id="signupFormElement">
+                    <div class="form-group">
+                        <label class="form-label">I am a...</label>
+                        <div class="role-selector">
+                            <div class="role-option" data-role="patient">
+                                <div class="role-icon">👤</div>
+                                <div class="role-title">Patient</div>
+                                <div class="role-desc">Seeking support</div>
+                            </div>
+                            <div class="role-option" data-role="provider">
+                                <div class="role-icon">🩺</div>
+                                <div class="role-title">Healthcare Provider</div>
+                                <div class="role-desc">Providing care</div>
+                            </div>
+                        </div>
+                        <div class="error-message" id="roleError">Please select your role</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" id="signupName" placeholder="Enter your full name" required>
+                        <div class="error-message" id="signupNameError">Please enter your full name</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" id="signupEmail" placeholder="Enter your email" required>
+                        <div class="error-message" id="signupEmailError">Please enter a valid email address</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="signupPassword" placeholder="Create a secure password" required>
+                        <div class="error-message" id="signupPasswordError">Password must be at least 8 characters</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm your password" required>
+                        <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="checkbox" id="agreeTerms" required>
+                        <label class="checkbox-label" for="agreeTerms">I agree to the <a href="#" class="form-link">Terms of Service</a> and <a href="#" class="form-link">Privacy Policy</a></label>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="signupBtn">
+                        Create My Account
+                    </button>
+
+                    <div class="success-message" id="signupSuccess">
+                        Account created successfully! Please check your email for verification.
+                    </div>
+                </form>
+
+                <div class="form-footer">
+                    <p>Already have an account? <a href="#" class="form-link" id="switchToLogin">Sign in here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword,
+            sendPasswordResetEmail,
+            updateProfile
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc,
+            serverTimestamp 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBz51wgf5qkrDUJCLmkCzV6jjca8rf2XpA",
+            authDomain: "mindmaze-64133.firebaseapp.com",
+            projectId: "mindmaze-64133",
+            storageBucket: "mindmaze-64133.firebasestorage.app",
+            messagingSenderId: "671544529067",
+            appId: "1:671544529067:web:32fa79ea61afa9ac6367ee",
+            measurementId: "G-XEF3FNNS0W"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Make Firebase services globally available
+        window.auth = auth;
+        window.db = db;
+        window.firebaseServices = {
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            sendPasswordResetEmail,
+            updateProfile,
+            setDoc,
+            doc,
+            serverTimestamp
+        };
+
+        console.log('Firebase initialized successfully');
+    </script>
+
+    <script>
+        // Form toggle functionality
+        const loginToggle = document.getElementById('loginToggle');
+        const signupToggle = document.getElementById('signupToggle');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const switchToSignup = document.getElementById('switchToSignup');
+        const switchToLogin = document.getElementById('switchToLogin');
+
+        function showLoginForm() {
+            loginToggle.classList.add('active');
+            signupToggle.classList.remove('active');
+            loginForm.style.display = 'block';
+            signupForm.style.display = 'none';
+            loginForm.classList.add('fade-in');
+        }
+
+        function showSignupForm() {
+            signupToggle.classList.add('active');
+            loginToggle.classList.remove('active');
+            signupForm.style.display = 'block';
+            loginForm.style.display = 'none';
+            signupForm.classList.add('fade-in');
+        }
+
+        loginToggle.addEventListener('click', showLoginForm);
+        signupToggle.addEventListener('click', showSignupForm);
+        switchToSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSignupForm();
+        });
+        switchToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLoginForm();
+        });
+
+        // Role selection functionality
+        const roleOptions = document.querySelectorAll('.role-option');
+        let selectedRole = '';
+
+        roleOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                roleOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedRole = option.dataset.role;
+                hideError('roleError');
+            });
+        });
+
+        // Form validation functions
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validatePassword(password) {
+            return password.length >= 8;
+        }
+
+        function showError(elementId, message = '') {
+            const errorElement = document.getElementById(elementId);
+            const inputElement = errorElement.previousElementSibling;
+            errorElement.style.display = 'block';
+            if (message) errorElement.textContent = message;
+            inputElement.classList.add('error');
+        }
+
+        function hideError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            const inputElement = errorElement.previousElementSibling;
+            errorElement.style.display = 'none';
+            inputElement.classList.remove('error');
+        }
+
+        function showSuccess(elementId, message = '') {
+            const successElement = document.getElementById(elementId);
+            successElement.style.display = 'block';
+            if (message) successElement.textContent = message;
+        }
+
+        function hideSuccess(elementId) {
+            const successElement = document.getElementById(elementId);
+            successElement.style.display = 'none';
+        }
+
+        // Redirect to dashboard after successful login
+        function redirectToDashboard(userRole = 'patient') {
+            // Store user role in localStorage for the next page
+            localStorage.setItem('userRole', userRole);
+            localStorage.setItem('isAuthenticated', 'true');
+            
+            // You can redirect to different pages based on role
+            if (userRole === 'provider') {
+                // Redirect to provider dashboard
+                window.location.href = 'provider-dashboard.html';
+            } else {
+                // Redirect to patient dashboard
+                window.location.href = 'patient-dashboard.html';
+            }
+        }
+
+        // Login form validation and submission
+        document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            let isValid = true;
+
+            // Reset errors and success messages
+            hideError('loginEmailError');
+            hideError('loginPasswordError');
+            hideSuccess('loginSuccess');
+
+            // Validate email
+            if (!email || !validateEmail(email)) {
+                showError('loginEmailError');
+                isValid = false;
+            }
+
+            // Validate password
+            if (!password) {
+                showError('loginPasswordError');
+                isValid = false;
+            }
+
+            if (isValid) {
+                const loginBtn = document.getElementById('loginBtn');
+                loginBtn.classList.add('loading');
+                loginBtn.disabled = true;
+                loginBtn.textContent = 'Signing In...';
+
+                try {
+                    // Sign in with Firebase
+                    const userCredential = await window.firebaseServices.signInWithEmailAndPassword(
+                        window.auth, 
+                        email, 
+                        password
+                    );
+                    
+                    const user = userCredential.user;
+                    console.log('User logged in successfully:', user.uid);
+                    
+                    showSuccess('loginSuccess', 'Login successful! Redirecting to dashboard...');
+                    
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        // You can get user role from Firestore if stored there
+                        // For now, defaulting to 'patient'
+                        redirectToDashboard('patient');
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    let errorMessage = 'Login failed. Please try again.';
+                    
+                    switch (error.code) {
+                        case 'auth/user-not-found':
+                            errorMessage = 'No account found with this email address.';
+                            showError('loginEmailError', errorMessage);
+                            break;
+                        case 'auth/wrong-password':
+                            errorMessage = 'Incorrect password.';
+                            showError('loginPasswordError', errorMessage);
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = 'Invalid email address.';
+                            showError('loginEmailError', errorMessage);
+                            break;
+                        case 'auth/too-many-requests':
+                            errorMessage = 'Too many failed attempts. Please try again later.';
+                            showError('loginPasswordError', errorMessage);
+                            break;
+                        default:
+                            showError('loginPasswordError', errorMessage);
+                    }
+                    
+                    loginBtn.classList.remove('loading');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Sign In to MindEase';
+                }
+            }
+        });
+
+        // Signup form validation and submission
+        document.getElementById('signupFormElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+            let isValid = true;
+
+            // Reset errors and success messages
+            hideError('roleError');
+            hideError('signupNameError');
+            hideError('signupEmailError');
+            hideError('signupPasswordError');
+            hideError('confirmPasswordError');
+            hideSuccess('signupSuccess');
+
+            // Validate role selection
+            if (!selectedRole) {
+                showError('roleError');
+                isValid = false;
+            }
+
+            // Validate name
+            if (!name.trim()) {
+                showError('signupNameError');
+                isValid = false;
+            }
+
+            // Validate email
+            if (!email || !validateEmail(email)) {
+                showError('signupEmailError');
+                isValid = false;
+            }
+
+            // Validate password
+            if (!validatePassword(password)) {
+                showError('signupPasswordError');
+                isValid = false;
+            }
+
+            // Validate password confirmation
+            if (password !== confirmPassword) {
+                showError('confirmPasswordError');
+                isValid = false;
+            }
+
+            // Validate terms agreement
+            if (!agreeTerms) {
+                alert('Please agree to the Terms of Service and Privacy Policy.');
+                isValid = false;
+            }
+
+            if (isValid) {
+                const signupBtn = document.getElementById('signupBtn');
+                signupBtn.classList.add('loading');
+                signupBtn.disabled = true;
+                signupBtn.textContent = 'Creating Account...';
+
+                try {
+                    // Create user with Firebase
+                    const userCredential = await window.firebaseServices.createUserWithEmailAndPassword(
+                        window.auth, 
+                        email, 
+                        password
+                    );
+                    
+                    const user = userCredential.user;
+                    console.log('User created successfully:', user.uid);
+
+                    // Update user profile with display name
+                    await window.firebaseServices.updateProfile(user, {
+                        displayName: name
+                    });
+
+                    // Store additional user data in Firestore
+                    await window.firebaseServices.setDoc(
+                        window.firebaseServices.doc(window.db, 'users', user.uid), 
+                        {
+                            name: name,
+                            email: email,
+                            role: selectedRole,
+                            createdAt: window.firebaseServices.serverTimestamp(),
+                            isActive: true
+                        }
+                    );
+
+                    showSuccess('signupSuccess', 'Account created successfully! Please check your email for verification.');
+                    
+                    // Redirect after 3 seconds
+                    setTimeout(() => {
+                        redirectToDashboard(selectedRole);
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    let errorMessage = 'Account creation failed. Please try again.';
+                    
+                    switch (error.code) {
+                        case 'auth/email-already-in-use':
+                            errorMessage = 'An account with this email already exists.';
+                            showError('signupEmailError', errorMessage);
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = 'Invalid email address.';
+                            showError('signupEmailError', errorMessage);
+                            break;
+                        case 'auth/weak-password':
+                            errorMessage = 'Password is too weak. Please choose a stronger password.';
+                            showError('signupPasswordError', errorMessage);
+                            break;
+                        default:
+                            showError('signupPasswordError', errorMessage);
+                    }
+                    
+                    signupBtn.classList.remove('loading');
+                    signupBtn.disabled = false;
+                    signupBtn.textContent = 'Create My Account';
+                }
+            }
+        });
+
+        // Password reset functionality
+        document.getElementById('resetPassword').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            
+            if (!email) {
+                alert('Please enter your email address first.');
+                document.getElementById('loginEmail').focus();
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            
+            try {
+                await window.firebaseServices.sendPasswordResetEmail(window.auth, email);
+                alert('Password reset email sent! Please check your inbox.');
+            } catch (error) {
+                console.error('Password reset error:', error);
+                let errorMessage = 'Failed to send password reset email.';
+                
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'No account found with this email address.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Invalid email address.';
+                        break;
+                }
+                
+                alert(errorMessage);
+            }
+        });
+
+        // Real-time validation
+        document.getElementById('loginEmail').addEventListener('blur', function() {
+            if (this.value && !validateEmail(this.value)) {
+                showError('loginEmailError');
+            } else {
+                hideError('loginEmailError');
+            }
+        });
+
+        document.getElementById('signupEmail').addEventListener('blur', function() {
+            if (this.value && !validateEmail(this.value)) {
+                showError('signupEmailError');
+            } else {
+                hideError('signupEmailError');
+            }
+        });
+
+        document.getElementById('signupPassword').addEventListener('input', function() {
+            if (this.value && !validatePassword(this.value)) {
+                showError('signupPasswordError');
+            } else {
+                hideError('signupPasswordError');
+            }
+        });
+
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('signupPassword').value;
+            if (this.value && this.value !== password) {
+                showError('confirmPasswordError');
+            } else {
+                hideError('confirmPasswordError');
+            }
+        });
+
+        // Smooth animations for floating shapes
+        document.addEventListener('DOMContentLoaded', function() {
+            const shapes = document.querySelectorAll('.shape');
+            shapes.forEach(shape => {
+                const randomDelay = Math.random() * 3;
+                shape.style.animationDelay = `${randomDelay}s`;
+            });
+        });
+
+        // Check if user is already logged in
+        window.auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log('User is already logged in:', user.uid);
+                // Optionally redirect if user is already authenticated
+                // redirectToDashboard();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMaze - Patient Dashboard</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container-fluid px-4">
+            <!-- MindMaze Logo -->
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <div class="logo-container me-3">
+                    <img src="/assets/logo.png" alt="MindMaze Brain Logo" width="40" height="40" class="logo-img">
+                </div>
+                <span class="brand-text">MindMaze</span>
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navigation Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-chart-line me-2"></i>Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-comments me-2"></i>Chat</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-book-open me-2"></i>Resources</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item me-3">
+                        <button class="btn btn-link theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-primary" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container-fluid px-4">
+            <!-- Welcome Section -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="welcome-section">
+                        <h1 class="welcome-title" id="dailyGreeting">Good day, <span id="patientName">Patient</span>!</h1>
+                        <p class="welcome-subtitle" id="dailyQuote">Loading your daily inspiration...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mindmaze Mood Tracker -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card mood-tracker-card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h5 class="card-title mb-2">
+                                        🧠 Mindmaze Mood Tracker
+                                    </h5>
+                                    <div class="mood-tracker-status">
+                                        <div class="status-dot" id="moodTrackerDot"></div>
+                                        <span class="status-text" id="moodTrackerText">Initializing mood tracker...</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <div class="mood-tracker-visual">
+                                        <div class="tracker-icon">
+                                            <i class="fas fa-brain"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Profile Card -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card profile-card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-2 text-center mb-3 mb-md-0">
+                                    <div class="profile-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h3 class="profile-name" id="profileName">Loading...</h3>
+                                    <p class="profile-email" id="profileEmail">Loading...</p>
+                                    <span class="profile-status">Active Patient</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stress-indicator">
+                                        <h5 class="stress-label">Today's Stress Level</h5>
+                                        <div class="stress-circle">
+                                            <span class="stress-value" id="currentStress">--</span>
+                                        </div>
+                                        <div class="stress-status mt-2">
+                                            <span class="stress-status-label" id="stressStatusLabel">Assessment Pending</span>
+                                        </div>
+                                        <div class="progress mt-3">
+                                            <div class="progress-bar" id="todayStressProgress" role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Wellness Check Row -->
+            <div class="row mb-5">
+                <!-- Daily Mood Tracker -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card mood-tracker-card">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-smile me-2"></i>Daily Mood Check
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mood-snapshot mb-3" id="moodSnapshot" style="display: none;">
+                                <h6 class="mood-snapshot-label">Today you feel:</h6>
+                                <div class="mood-display">
+                                    <span class="mood-emoji" id="selectedMoodEmoji">😊</span>
+                                    <span class="mood-text" id="selectedMoodText">Happy</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mood-selector" id="moodSelector">
+                                <p class="mood-prompt">How are you feeling today?</p>
+                                <div class="mood-options">
+                                    <div class="mood-option" data-mood="very-happy" data-emoji="😃" data-text="Very Happy" data-value="5">
+                                        <span class="mood-emoji-btn">😃</span>
+                                        <span class="mood-label">Very Happy</span>
+                                    </div>
+                                    <div class="mood-option" data-mood="happy" data-emoji="🙂" data-text="Happy" data-value="4">
+                                        <span class="mood-emoji-btn">🙂</span>
+                                        <span class="mood-label">Happy</span>
+                                    </div>
+                                    <div class="mood-option" data-mood="neutral" data-emoji="😐" data-text="Neutral" data-value="3">
+                                        <span class="mood-emoji-btn">😐</span>
+                                        <span class="mood-label">Neutral</span>
+                                    </div>
+                                    <div class="mood-option" data-mood="sad" data-emoji="😟" data-text="Sad" data-value="2">
+                                        <span class="mood-emoji-btn">😟</span>
+                                        <span class="mood-label">Sad</span>
+                                    </div>
+                                    <div class="mood-option" data-mood="very-sad" data-emoji="😢" data-text="Very Sad" data-value="1">
+                                        <span class="mood-emoji-btn">😢</span>
+                                        <span class="mood-label">Very Sad</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simple Breathing Exercise -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card breathing-exercise-card">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-wind me-2"></i>Quick Breathing
+                            </h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="breathing-container">
+                                <div class="breathing-circle-simple" id="breathingCircleSimple">
+                                    <div class="breathing-inner-simple"></div>
+                                </div>
+                                <div class="breathing-instruction" id="breathingInstructionSimple">
+                                    Ready to begin
+                                </div>
+                                <div class="breathing-timer-display" id="breathingTimerDisplay">
+                                    1:00
+                                </div>
+                            </div>
+                            <div class="breathing-controls">
+                                <button class="btn btn-primary" id="startSimpleBreathing">
+                                    <i class="fas fa-play me-2"></i>Start
+                                </button>
+                                <button class="btn btn-outline-secondary" id="stopSimpleBreathing" style="display: none;">
+                                    <i class="fas fa-stop me-2"></i>Stop
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Journal Prompt -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card journal-card">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-journal-whills me-2"></i>Daily Reflection
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="journal-prompt">
+                                <h6 class="prompt-label">Today's Prompt:</h6>
+                                <p class="prompt-text" id="dailyPromptText">Loading prompt...</p>
+                            </div>
+                            
+                            <div class="journal-input" id="journalInput">
+                                <textarea 
+                                    class="form-control journal-textarea" 
+                                    id="journalEntry" 
+                                    placeholder="Write your thoughts here..."
+                                    rows="4">
+                                </textarea>
+                                <button class="btn btn-primary mt-3" id="saveJournalEntry">
+                                    <i class="fas fa-save me-2"></i>Save Entry
+                                </button>
+                            </div>
+                            
+                            <div class="journal-saved" id="journalSaved" style="display: none;">
+                                <div class="saved-entry" id="savedEntryText"></div>
+                                <div class="saved-indicator">
+                                    <i class="fas fa-check-circle me-2"></i>Entry saved for today
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stress Overview Section -->
+            <div class="row mb-5">
+                <div class="col-lg-8 mb-4">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h4 class="card-title">
+                                <i class="fas fa-chart-line me-2"></i>Weekly Stress Overview
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="stressChart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="card stats-card">
+                        <div class="card-header">
+                            <h5 class="card-title">This Week's Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="stat-item">
+                                <div class="stat-label">Average Stress</div>
+                                <div class="stat-value" id="avgStress">--</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Lowest Point</div>
+                                <div class="stat-value" id="minStress">--</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Highest Point</div>
+                                <div class="stat-value" id="maxStress">--</div>
+                            </div>
+                            <div class="progress-container">
+                                <label class="progress-label">Weekly Progress</label>
+                                <div class="progress">
+                                    <div class="progress-bar" id="weeklyProgress" role="progressbar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity & Mindfulness Recommendations -->
+            <div class="row mb-5">
+                <!-- Recent Activity -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card activity-card">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-history me-2"></i>Recent Mood & Activity Logs
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="activity-list" id="activityList">
+                                <!-- Activity items will be populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mindfulness Recommendations -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card recommendations-card">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-leaf me-2"></i>Mindfulness Recommendations
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="recommendations-grid">
+                                <div class="recommendation-item">
+                                    <div class="recommendation-icon">
+                                        <i class="fas fa-spa"></i>
+                                    </div>
+                                    <div class="recommendation-content">
+                                        <h6>Deep Breathing</h6>
+                                        <p>5-minute guided session</p>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="openBreathingModal()">Start Session</button>
+                                    </div>
+                                </div>
+                                <div class="recommendation-item">
+                                    <div class="recommendation-icon">
+                                        <i class="fas fa-music"></i>
+                                    </div>
+                                    <div class="recommendation-content">
+                                        <h6>Calming Sounds</h6>
+                                        <p>Nature playlist</p>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="openSoundsModal()">Listen</button>
+                                    </div>
+                                </div>
+                                <div class="recommendation-item">
+                                    <div class="recommendation-icon">
+                                        <i class="fas fa-moon"></i>
+                                    </div>
+                                    <div class="recommendation-content">
+                                        <h6>Sleep Stories</h6>
+                                        <p>Bedtime routine</p>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="openStoriesModal()">Play</button>
+                                    </div>
+                                </div>
+                                <div class="recommendation-item">
+                                    <div class="recommendation-icon">
+                                        <i class="fas fa-brain"></i>
+                                    </div>
+                                    <div class="recommendation-content">
+                                        <h6>Mindful Focus</h6>
+                                        <p>Concentration exercises</p>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="openFocusModal()">Begin</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Daily Stress Questions Modal -->
+    <div class="modal fade" id="stressQuestionsModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content stress-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Daily Stress Assessment</h5>
+                    <div class="question-progress">
+                        <span id="currentQuestionNum">1</span> of <span id="totalQuestions">8</span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <!-- Progress Bar -->
+                    <div class="progress-container mb-4">
+                        <div class="progress stress-progress">
+                            <div class="progress-bar" id="questionsProgress" role="progressbar" style="width: 12.5%"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span id="progressPercentage">12.5%</span> Complete
+                        </div>
+                    </div>
+
+                    <!-- Already Completed Message -->
+                    <div id="alreadyCompletedMessage" class="already-completed-card" style="display: none;">
+                        <div class="completed-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h4>Assessment Complete!</h4>
+                        <p>You've already completed today's stress check. Come back tomorrow for your next assessment!</p>
+                        <div class="stress-score-display">
+                            <span>Today's Stress Score: </span>
+                            <span id="completedStressScore" class="score-value">--</span>
+                        </div>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+
+                    <!-- Questions Container -->
+                    <div id="questionsContainer">
+                        <div id="currentQuestionSlide" class="question-slide-wizard">
+                            <div class="question-content">
+                                <h3 id="currentQuestionText" class="question-title">Loading question...</h3>
+                                <div id="currentQuestionOptions" class="question-options-wizard">
+                                    <!-- Options will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div id="questionNavigation" class="question-navigation d-flex justify-content-between align-items-center gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="prevQuestion" disabled>
+                            <i class="fas fa-chevron-left me-2"></i>Previous
+                        </button>
+                        <button type="button" class="btn btn-primary" id="nextQuestion" disabled>
+                            Next<i class="fas fa-chevron-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deep Breathing Modal -->
+    <div class="modal fade" id="breathingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content mindfulness-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-spa me-2"></i>Deep Breathing Exercise
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="breathing-session">
+                        <div class="breathing-circle" id="breathingCircle">
+                            <div class="breathing-inner" id="breathingInner"></div>
+                        </div>
+                        <div class="breathing-instruction" id="breathingInstruction">
+                            Get ready to breathe deeply
+                        </div>
+                        <div class="breathing-timer" id="breathingTimer">5:00</div>
+                        <div class="breathing-controls mt-4">
+                            <button class="btn btn-primary btn-lg" id="startBreathing">
+                                <i class="fas fa-play me-2"></i>Start Session
+                            </button>
+                            <button class="btn btn-outline-secondary btn-lg ms-2" id="pauseBreathing" style="display: none;">
+                                <i class="fas fa-pause me-2"></i>Pause
+                            </button>
+                            <button class="btn btn-outline-danger btn-lg ms-2" id="stopBreathing" style="display: none;">
+                                <i class="fas fa-stop me-2"></i>Stop
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calming Sounds Modal -->
+    <div class="modal fade" id="soundsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content mindfulness-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-music me-2"></i>Calming Sounds
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="sounds-list">
+                        <div class="sound-item" data-sound="rain" data-name="Gentle Rain">
+                            <div class="sound-icon">
+                                <i class="fas fa-cloud-rain"></i>
+                            </div>
+                            <div class="sound-info">
+                                <h6 class="sound-title">Gentle Rain</h6>
+                                <p class="sound-subtitle">Soft rainfall for relaxation</p>
+                            </div>
+                            <div class="sound-action">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="sound-item" data-sound="ocean" data-name="Ocean Waves">
+                            <div class="sound-icon">
+                                <i class="fas fa-water"></i>
+                            </div>
+                            <div class="sound-info">
+                                <h6 class="sound-title">Ocean Waves</h6>
+                                <p class="sound-subtitle">Rhythmic coastal sounds</p>
+                            </div>
+                            <div class="sound-action">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="sound-item" data-sound="forest" data-name="Forest Ambiance">
+                            <div class="sound-icon">
+                                <i class="fas fa-tree"></i>
+                            </div>
+                            <div class="sound-info">
+                                <h6 class="sound-title">Forest Ambiance</h6>
+                                <p class="sound-subtitle">Wind through the trees</p>
+                            </div>
+                            <div class="sound-action">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="sound-item" data-sound="birds" data-name="Morning Birds">
+                            <div class="sound-icon">
+                                <i class="fas fa-dove"></i>
+                            </div>
+                            <div class="sound-info">
+                                <h6 class="sound-title">Morning Birds</h6>
+                                <p class="sound-subtitle">Peaceful birdsong</p>
+                            </div>
+                            <div class="sound-action">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <audio id="soundPlayer" loop></audio>
+                </div>
+                <div class="spotify-controls" id="soundControls" style="display: none;">
+                    <div class="control-info">
+                        <i class="fas fa-music me-2"></i>
+                        <span id="currentSoundName">Now Playing</span>
+                    </div>
+                    <div class="control-buttons">
+                        <button class="control-btn" id="soundPlayBtn">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="control-btn" id="soundPauseBtn" style="display: none;">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button class="control-btn" id="soundStopBtn">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sleep Stories Modal -->
+    <div class="modal fade" id="storiesModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content mindfulness-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-moon me-2"></i>Sleep Stories
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="stories-grid">
+                        <div class="story-card" data-story="peaceful-meadow" data-name="Peaceful Meadow">
+                            <div class="story-cover">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <div class="story-content">
+                                <h6 class="story-title">Peaceful Meadow</h6>
+                                <p class="story-description">Drift through gentle grasslands under a starlit sky</p>
+                            </div>
+                        </div>
+                        <div class="story-card" data-story="starry-night" data-name="Starry Night">
+                            <div class="story-cover">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="story-content">
+                                <h6 class="story-title">Starry Night</h6>
+                                <p class="story-description">Journey through a quiet night filled with twinkling stars</p>
+                            </div>
+                        </div>
+                        <div class="story-card" data-story="mountain-stream" data-name="Mountain Stream">
+                            <div class="story-cover">
+                                <i class="fas fa-mountain"></i>
+                            </div>
+                            <div class="story-content">
+                                <h6 class="story-title">Mountain Stream</h6>
+                                <p class="story-description">Follow a gentle stream through misty mountain valleys</p>
+                            </div>
+                        </div>
+                    </div>
+                    <audio id="storyPlayer"></audio>
+                </div>
+                <div class="spotify-controls" id="storyControls" style="display: none;">
+                    <div class="control-info">
+                        <i class="fas fa-moon me-2"></i>
+                        <span id="currentStoryName">Now Playing</span>
+                    </div>
+                    <div class="control-buttons">
+                        <button class="control-btn" id="storyPlayBtn">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="control-btn" id="storyPauseBtn" style="display: none;">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button class="control-btn" id="storyStopBtn">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mindful Focus Modal -->
+    <div class="modal fade" id="focusModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content mindfulness-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-brain me-2"></i>Mindful Focus Exercises
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="focus-exercises">
+                        <div class="exercise-grid">
+                            <div class="exercise-card" onclick="startFocusExercise('counting')">
+                                <div class="exercise-icon">
+                                    <i class="fas fa-sort-numeric-up"></i>
+                                </div>
+                                <h6>Counting Breaths</h6>
+                                <p>Count each breath cycle from 1 to 10, then start over</p>
+                            </div>
+                            <div class="exercise-card" onclick="startFocusExercise('object')">
+                                <div class="exercise-icon">
+                                    <i class="fas fa-dot-circle"></i>
+                                </div>
+                                <h6>Focus on Object</h6>
+                                <p>Concentrate on a single point or object</p>
+                            </div>
+                            <div class="exercise-card" onclick="startFocusExercise('body')">
+                                <div class="exercise-icon">
+                                    <i class="fas fa-male"></i>
+                                </div>
+                                <h6>Body Scan</h6>
+                                <p>Slowly scan from head to toe, noticing sensations</p>
+                            </div>
+                            <div class="exercise-card" onclick="startFocusExercise('word')">
+                                <div class="exercise-icon">
+                                    <i class="fas fa-quote-right"></i>
+                                </div>
+                                <h6>Word Repetition</h6>
+                                <p>Silently repeat a calming word or phrase</p>
+                            </div>
+                        </div>
+                        
+                        <div class="focus-session" id="focusSession" style="display: none;">
+                            <div class="focus-visual">
+                                <div class="focus-circle" id="focusCircle">
+                                    <div class="focus-dot"></div>
+                                </div>
+                            </div>
+                            <div class="focus-instruction" id="focusInstruction">
+                                Select an exercise above to begin
+                            </div>
+                            <div class="focus-timer" id="focusTimer">3:00</div>
+                            <div class="focus-controls mt-4">
+                                <button class="btn btn-primary btn-lg" id="startFocus">
+                                    <i class="fas fa-play me-2"></i>Start Exercise
+                                </button>
+                                <button class="btn btn-outline-secondary btn-lg ms-2" id="pauseFocus" style="display: none;">
+                                    <i class="fas fa-pause me-2"></i>Pause
+                                </button>
+                                <button class="btn btn-outline-danger btn-lg ms-2" id="stopFocus" style="display: none;">
+                                    <i class="fas fa-stop me-2"></i>Stop
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container-fluid px-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2024 MindMaze. Supporting your mental wellness journey.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="footer-link">Privacy Policy</a> |
+                    <a href="#" class="footer-link">Terms of Service</a> |
+                    <a href="#" class="footer-link">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <!-- Fallback functions for modal openers -->
+    <script>
+      (function () {
+        function openModal(id) {
+          var el = document.getElementById(id);
+          if (el && window.bootstrap && bootstrap.Modal) {
+            bootstrap.Modal.getOrCreateInstance(el).show();
+          }
+        }
+        // Only define if the module hasn't already created them
+        window.openBreathingModal = window.openBreathingModal || function () { openModal('breathingModal'); };
+        window.openSoundsModal = window.openSoundsModal || function () { openModal('soundsModal'); };
+        window.openStoriesModal = window.openStoriesModal || function () { openModal('storiesModal'); };
+        window.openFocusModal = window.openFocusModal || function () { openModal('focusModal'); };
+        window.playSound = window.playSound || function() { console.log('playSound called'); };
+        window.playStory = window.playStory || function() { console.log('playStory called'); };
+        window.startFocusExercise = window.startFocusExercise || function() { console.log('startFocusExercise called'); };
+      })();
+    </script>
+    
+    <!-- Firebase SDK -->
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="dashboard.js"></script>
+    
+    <!-- Fix for journal prompt loading -->
+    <script>
+      // Ensure journal prompt loads regardless of saved entry
+      document.addEventListener('DOMContentLoaded', function() {
+        // Load the daily journal prompt immediately
+        const promptTextEl = document.getElementById('dailyPromptText');
+        if (promptTextEl) {
+          const today = new Date();
+          const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+          const journalPrompts = [
+            "What are three things you're grateful for today?",
+            "Describe a moment that made you smile recently.",
+            "What is one challenge you overcame this week?",
+            "How did you practice self-care today?",
+            "What would you tell your past self from a year ago?",
+            "Describe your ideal peaceful day.",
+            "What small accomplishment are you proud of today?",
+            "How did you connect with others today?",
+            "What lesson did you learn recently?",
+            "What are you looking forward to tomorrow?",
+            "Describe something beautiful you noticed today.",
+            "How did you step outside your comfort zone recently?",
+            "What positive change have you made in your life?",
+            "What would you like to let go of today?",
+            "How did you show kindness to yourself or others?",
+            "What skills or talents are you developing?",
+            "Describe a place where you feel most at peace.",
+            "What advice would you give to a friend facing your current challenges?",
+            "How have you grown as a person this month?",
+            "What simple pleasure brought you joy today?",
+            "What are you most curious about right now?",
+            "How did you make today meaningful?",
+            "What positive habit are you building?",
+            "Describe a recent conversation that impacted you.",
+            "What does success mean to you today?",
+            "How did you practice mindfulness today?",
+            "What boundaries are you learning to set?",
+            "What would you like to remember about this day?",
+            "How did you nurture your relationships today?",
+            "What inspires you to keep moving forward?"
+          ];
+          const promptIndex = dayOfYear % journalPrompts.length;
+          const todayPrompt = journalPrompts[promptIndex];
+          promptTextEl.textContent = todayPrompt;
+          console.log('Journal prompt loaded immediately:', todayPrompt);
+        }
+      });
+    </script>
+</body>
+</html>
