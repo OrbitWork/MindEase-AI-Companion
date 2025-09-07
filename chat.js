@@ -20,8 +20,7 @@ import {
     increment
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-// OpenAI Configuration - Move to backend in production!
-const OPENAI_API_KEY = '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'; // Replace with your key
+// OpenAI Configuration - Move to backend in production
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 // Theme Configuration
