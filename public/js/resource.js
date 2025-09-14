@@ -1,4 +1,4 @@
-// Resource Page JavaScript - Matching Chat Design System
+// Resource Page JavaScript 
 // Import Firebase configuration
 import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
@@ -295,10 +295,6 @@ function createVideoCard(video, index) {
 function initializeModal() {
     const modal = document.getElementById('videoModal');
     const closeBtn = document.getElementById('modalClose');
-/*     const muteBtn = document.getElementById('muteBtn');
-    const volumeSlider = document.getElementById('volumeSlider');
-    const volumeLabel = volumeSlider.nextElementSibling;
-    const fullscreenBtn = document.getElementById('fullscreenBtn'); */
     
     // Close modal handlers
     closeBtn.addEventListener('click', closeVideoModal);
@@ -315,18 +311,6 @@ function initializeModal() {
         }
     });
     
-    // Mute toggle
-/*     muteBtn.addEventListener('click', toggleMute);
-    
-    // Volume control
-    volumeSlider.addEventListener('input', (e) => {
-        const volume = parseInt(e.target.value);
-        setVolume(volume);
-        volumeLabel.textContent = `${volume}%`;
-    });
-    
-    // Fullscreen toggle
-    fullscreenBtn.addEventListener('click', toggleFullscreen); */
 }
 
 // Open video modal (Netflix-style)
@@ -404,86 +388,6 @@ function setupFocusTrap() {
         }
     }
 }
-
-/* // Video control functions
-function toggleMute() {
-    const videoFrame = document.getElementById('videoFrame');
-    const muteBtn = document.getElementById('muteBtn');
-    const muteIcon = muteBtn.querySelector('i');
-    
-    // Send mute/unmute command to YouTube player via postMessage
-    if (videoFrame.contentWindow) {
-        const currentLabel = muteBtn.getAttribute('aria-label');
-        const isMuted = currentLabel.includes('Unmute') || muteIcon.classList.contains('fa-volume-mute');
-        
-        if (isMuted) {
-            videoFrame.contentWindow.postMessage(
-                '{"event":"command","func":"unMute","args":""}',
-                'https://www.youtube-nocookie.com'
-            );
-            muteIcon.className = 'fas fa-volume-up';
-            muteBtn.setAttribute('aria-label', 'Mute video');
-        } else {
-            videoFrame.contentWindow.postMessage(
-                '{"event":"command","func":"mute","args":""}',
-                'https://www.youtube-nocookie.com'
-            );
-            muteIcon.className = 'fas fa-volume-mute';
-            muteBtn.setAttribute('aria-label', 'Unmute video');
-        }
-    }
-}
-
-function setVolume(volume) {
-    const videoFrame = document.getElementById('videoFrame');
-    
-    if (videoFrame.contentWindow) {
-        videoFrame.contentWindow.postMessage(
-            `{"event":"command","func":"setVolume","args":"${volume}"}`,
-            'https://www.youtube-nocookie.com'
-        );
-    }
-}
-
-function toggleFullscreen() {
-    const videoContainer = document.querySelector('.modal-video-container');
-    const fullscreenBtn = document.getElementById('fullscreenBtn');
-    const fullscreenIcon = fullscreenBtn.querySelector('i');
-    
-    if (!document.fullscreenElement) {
-        // Enter fullscreen
-        if (videoContainer.requestFullscreen) {
-            videoContainer.requestFullscreen();
-        } else if (videoContainer.mozRequestFullScreen) {
-            videoContainer.mozRequestFullScreen();
-        } else if (videoContainer.webkitRequestFullscreen) {
-            videoContainer.webkitRequestFullscreen();
-        } else if (videoContainer.msRequestFullscreen) {
-            videoContainer.msRequestFullscreen();
-        }
-        fullscreenIcon.className = 'fas fa-compress';
-        fullscreenBtn.setAttribute('aria-label', 'Exit fullscreen');
-    } else {
-        // Exit fullscreen
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        }
-        fullscreenIcon.className = 'fas fa-expand';
-        fullscreenBtn.setAttribute('aria-label', 'Enter fullscreen');
-    }
-} */
-
-// Listen for fullscreen changes to update button state
-/* document.addEventListener('fullscreenchange', updateFullscreenButton);
-document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
-document.addEventListener('mozfullscreenchange', updateFullscreenButton);
-document.addEventListener('MSFullscreenChange', updateFullscreenButton); */
 
 function updateFullscreenButton() {
     const fullscreenBtn = document.getElementById('fullscreenBtn');
